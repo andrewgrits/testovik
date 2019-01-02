@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Data.Entities;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Context
 {
-    public class BaseDbContext : DbContext
+    public class BaseDbContext : IdentityDbContext<UserEntity>
     {
         public BaseDbContext(DbContextOptions<BaseDbContext> options) : base(options)
-        { }
+        {
+        }
 
-        public DbSet<TestEntity> TestEntities { get; set; }
+        public DbSet<UserEntity> UserEntities { get; set; }
     }
 }
