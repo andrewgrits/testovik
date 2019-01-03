@@ -10,6 +10,13 @@ namespace Data.Context
         {
         }
 
+        #region Tables
+
         public DbSet<UserEntity> UserEntities { get; set; }
+        public DbSet<TestEntity> TestEntities { get; set; }
+        public DbSet<QuestionEntity> QuestionEntities { get; set; }
+        public DbSet<AnswerEntity> AnswerEntities { get; set; }
+
+        #endregion
     }
 }
