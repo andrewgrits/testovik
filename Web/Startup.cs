@@ -36,9 +36,12 @@ namespace Web
             });
 
             services.AddDbContext<BaseDbContext>(options =>
-                    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseLazyLoadingProxies();
+            });
 
-            services.AddIdentity<UserEntity, IdentityRole>()
+        services.AddIdentity<UserEntity, IdentityRole>()
                 .AddEntityFrameworkStores<BaseDbContext>()
                 .AddDefaultTokenProviders();
 

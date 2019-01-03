@@ -1,0 +1,17 @@
+﻿@model TestViewModel
+
+@{
+    ViewData["Title"] = "Тест № ...";
+    Layout = "_Layout";
+}
+
+@Model.Name
+@foreach (var question in Model.Questions)
+{
+    @question.Message
+    foreach (var answer in question.Answers)
+    {
+        @answer.Message
+    }
+}
+
