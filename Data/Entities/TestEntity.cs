@@ -8,6 +8,7 @@ namespace Data.Entities
     {
         public string Name { get; set; }
         public string ImagePath { get; set; }
+        public bool IsActive { get; set; }
         public virtual List<QuestionEntity> Questions { get; set; }
     }
 }
