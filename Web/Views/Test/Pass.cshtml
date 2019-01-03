@@ -1,17 +1,31 @@
 ﻿@model TestViewModel
 
 @{
-    ViewData["Title"] = "Тест № ...";
+    ViewData["Title"] = Model.Name;
     Layout = "_Layout";
 }
+<row>
+    <div class="col-lg-6 col-sm-8 col-lg-offset-3 col-sm-offset-2">
+        <div class="panel panel-info">
+            <div class="panel-heading text-center"><h4>@Model.Name</h4></div>
+            <div class="panel-body text-center" style="background: url(../images/tests/test1.jpg);">
+                @using (Html.BeginForm())
+                {
+                    foreach (var question in Model.Questions)
+                    {
+                        <br/>
+                        @Html.Label(question.Message, question.Message)
+                        foreach (var answer in question.Answers)
+                        {
+                            <br/>
+                            <a class="btn btn-primary" style="width: 50%">@answer.Message</a>
+                            <br/>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</row>
 
-@Model.Name
-@foreach (var question in Model.Questions)
-{
-    @question.Message
-    foreach (var answer in question.Answers)
-    {
-        @answer.Message
-    }
-}
 
