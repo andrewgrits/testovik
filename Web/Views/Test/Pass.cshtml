@@ -9,20 +9,35 @@
         <div class="panel panel-info">
             <div class="panel-heading text-center"><h4>@Model.Name</h4></div>
             <div class="panel-body text-center" style="background: url(../images/tests/test1.jpg);">
-                @using (Html.BeginForm())
-                {
-                    foreach (var question in Model.Questions)
+                <div class="panel col-lg-6 col-lg-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+                    @using (Html.BeginForm("Pass","Test"))
                     {
-                        <br/>
-                        @Html.Label(question.Message, question.Message)
-                        foreach (var answer in question.Answers)
+                        @Html.HiddenFor(x => x.Id)
+                        for (int i = 0; i < Model.Questions.Count; i++)
                         {
-                            <br/>
-                            <a class="btn btn-primary" style="width: 50%">@answer.Message</a>
-                            <br/>
+                            <br />
+                            @Html.LabelFor(x => x.Questions[i].Message, Model.Questions[i].Message)
+                            for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
+                            {
+                                <br />
+                                if (j == 0)
+                                {
+                                    @Html.RadioButtonFor(x => x.Questions[i].Message, Model.Questions[i].Answers[j].Message, new { Checked = "true" })
+                                    @Model.Questions[i].Answers[j].Message
+                                }
+                                else
+                                {
+                                    @Html.RadioButtonFor(x => x.Questions[i].Message, Model.Questions[i].Answers[j].Message)
+                                    @Model.Questions[i].Answers[j].Message
+                                }
+                                <br />
+                            }
                         }
+                        <br />
+                        <input type="submit" class="btn btn-success" />
+                        <br /><br />
                     }
-                }
+                </div>
             </div>
         </div>
     </div>
