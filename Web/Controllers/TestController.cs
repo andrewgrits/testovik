@@ -13,9 +13,9 @@ namespace Web.Controllers
 {
     public class TestController : Controller
     {
-        private readonly IRepository<TestEntity, BaseDbContext> testRepository;
+        private readonly IRepository<TestEntity> testRepository;
 
-        public TestController(IRepository<TestEntity, BaseDbContext> testRepository)
+        public TestController(IRepository<TestEntity> testRepository)
         {
             this.testRepository = testRepository;
         }

@@ -67,8 +67,8 @@ namespace Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             var builder = new ContainerBuilder();
-            builder.RegisterGeneric(typeof(BaseRepository<,>))
-                .As(typeof(IRepository<,>)).InstancePerLifetimeScope();
+            builder.RegisterGeneric(typeof(BaseRepository<>))
+                .As(typeof(IRepository<>)).InstancePerLifetimeScope();
             builder.Populate(services);
             ApplicationContainer = builder.Build();
 

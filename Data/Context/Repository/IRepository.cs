@@ -13,9 +13,4 @@ namespace Data.Context.Repository
         Task CreateAsync(T entity);
         void CreateMany(List<T> entities);
     }
-
-    public interface IRepository<T, T2> : IRepository<T>
-        where T : class
-        where T2 : DbContext
-    { }
 }

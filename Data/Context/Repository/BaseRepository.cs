@@ -10,11 +10,11 @@ namespace Data.Context.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : class
     {
-        private readonly DbContext context;
+        private readonly BaseDbContext context;
         private readonly DbSet<T> set;
         private readonly IQueryable<T> queryableSet;
 
-        public BaseRepository(DbContext context)
+        public BaseRepository(BaseDbContext context)
         {
             this.context = context;
             set = context.Set<T>();
@@ -62,14 +62,5 @@ namespace Data.Context.Repository
         public Expression Expression => queryableSet.Expression;
         public Type ElementType => queryableSet.ElementType;
         public IQueryProvider Provider => queryableSet.Provider;
-    }
-
-    public class BaseRepository<T1, T2> : BaseRepository<T1>, IRepository<T1, T2>
-        where T1 : class
-        where T2 : DbContext
-    {
-        public BaseRepository(T2 context) : base(context)
-        {
-        }
     }
 }
