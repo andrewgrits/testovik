@@ -62,7 +62,16 @@ namespace Web.Controllers
                 }
             }
 
-            return Ok(rightAnswersCount);
+            return RedirectToAction("ShowResult", new ResultViewModel
+            {
+                AnswersCount = testViewModel.Questions.Count,
+                RightAnswersCount = rightAnswersCount
+            });
+        }
+
+        public IActionResult ShowResult(ResultViewModel result)
+        {
+            return View(result);
         }
     }
 }

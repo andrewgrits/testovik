@@ -1,0 +1,20 @@
+﻿@model ResultViewModel
+@{
+    ViewData["Title"] = "Результаты теста";
+    Layout = "_Layout";
+}
+
+<row>
+    <div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+        <div class="panel panel-info text-center">
+            <div class="panel-heading"><h4>Ваши результаты</h4></div>
+            <div class="panel-body">
+                <h3>Поздравляем, вы прошли тест!</h3>
+                <h4>Вы ответили правильно на @Model.RightAnswersCount вопросов из @Model.AnswersCount</h4>
+            </div>
+            <div class="panel-footer">
+                <a href="@Url.Content("~/")" class="btn btn-success">Вернуться на главную</a>
+            </div>
+        </div>
+    </div>
+</row>
