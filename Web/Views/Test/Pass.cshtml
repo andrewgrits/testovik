@@ -1,16 +1,16 @@
-﻿@model TestViewModel
+﻿@model TestModel
 
 @{
     ViewData["Title"] = Model.Name;
     Layout = "_Layout";
 }
-<row>
+<div class="row">
     <div class="col-lg-6 col-sm-8 col-lg-offset-3 col-sm-offset-2">
         <div class="panel panel-info">
             <div class="panel-heading text-center"><h4>@Model.Name</h4></div>
             <div class="panel-body text-center" style="background: url(../images/tests/test1.jpg);">
                 <div class="panel col-lg-6 col-lg-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-                    @using (Html.BeginForm("Pass","Test"))
+                    @using (Html.BeginForm("Pass", "Test"))
                     {
                         @Html.HiddenFor(x => x.Id)
                         for (int i = 0; i < Model.Questions.Count; i++)
@@ -19,17 +19,11 @@
                             @Html.LabelFor(x => x.Questions[i].Message, Model.Questions[i].Message)
                             for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
                             {
+                                @Html.HiddenFor(x => x.Questions[i].Answers[j].Id)
                                 <br />
-                                if (j == 0)
-                                {
-                                    @Html.RadioButtonFor(x => x.Questions[i].Message, Model.Questions[i].Answers[j].Message, new { Checked = "true" })
-                                    @Model.Questions[i].Answers[j].Message
-                                }
-                                else
-                                {
-                                    @Html.RadioButtonFor(x => x.Questions[i].Message, Model.Questions[i].Answers[j].Message)
-                                    @Model.Questions[i].Answers[j].Message
-                                }
+                                @Html.RadioButtonFor(x => x.Questions[i].SelectedAnswerId, Model.Questions[i].Answers[j].Id)
+                                @Model.Questions[i].Answers[j].Message
+                                @Html.ValidationMessageFor(x => x.Questions[i].SelectedAnswerId)
                                 <br />
                             }
                         }
@@ -41,6 +35,6 @@
             </div>
         </div>
     </div>
-</row>
+</div>
 
 

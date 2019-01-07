@@ -1,0 +1,48 @@
+﻿@model TestModel
+@{
+    ViewData["Title"] = "Настройки теста";
+}
+
+<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+    <div class="panel panel-info">
+        @using (Html.BeginForm())
+        {
+            <div class="panel-heading">
+                <h3>Настройки теста</h3>
+            </div>
+            <div class="panel-body">
+
+                @Html.HiddenFor(x => x.Id)
+                <div class="form-group">
+                    @Html.LabelFor(x => x.Name)
+                    @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @for (int i = 0; i < Model.Questions.Count; i++)
+                    {
+                        @Html.HiddenFor(x => x.Questions[i].Id)
+                        @Html.LabelFor(x => x.Questions[i].Message)
+                        @Html.TextBoxFor(x => x.Questions[i].Message, Model.Questions[i].Message, new { @class = "form-control" })
+                        <div class="panel col-lg-offset-1">
+                            <label>Варианты ответа</label>
+                            @for (int j = 0; j < Model.Questions[i].Answers.Count; j++)
+                            {
+                                <div class="form-group">
+                                    @Html.HiddenFor(x => x.Questions[i].Answers[j].Id)
+                                    @Html.TextBoxFor(x => x.Questions[i].Answers[j].Message, Model.Questions[i].Answers[j].Message, new { @class = "form-control" })
+                                    @Html.RadioButtonFor(x => x.Questions[i].SelectedAnswerId, Model.Questions[i].Answers[j].Id)
+                                    @Html.ValidationMessageFor(x => x.Questions[i].SelectedAnswerId)
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div class="panel-footer">
+                <input type="submit" class="btn btn-success" />
+            </div>
+        }
+    </div>
+</div>
+

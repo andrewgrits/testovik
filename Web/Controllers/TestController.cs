@@ -23,55 +23,49 @@ namespace Web.Controllers
         public async Task<IActionResult> Pass(Guid testId)
         {
             var test = await testRepository.FirstOrDefaultAsync(x => x.Id == testId);
-            var testModel = new TestViewModel
-            {
-                Id = test.Id,
-                Name = test.Name,
-                ImagePath = test.ImagePath,
-                Questions = test.Questions.Select(question => new QuestionModel
-                {
-                    Message = question.Message,
-                    Answers = question.Answers.Select(answer => new AnswerModel
-                    {
-                        Message = answer.Message
-                    }).ToList()
-                }).ToList()
-            };
 
-            return View(testModel);
+            return View(GetTestModelWithoutSelectedAnswers(new TestModel(test)));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Pass(TestViewModel testViewModel)
+        public async Task<IActionResult> Pass(TestModel testModel)
         {
-            var test = await testRepository.FirstOrDefaultAsync(x => x.Id == testViewModel.Id);
+            var test = await testRepository.FirstOrDefaultAsync(x => x.Id == testModel.Id);
 
-            if (test == null || testViewModel.Questions.Count < test.Questions.Count)
+            if (test == null || testModel.Questions.Count < test.Questions.Count)
             {
-                return Redirect($"~/Test/Pass?testId={testViewModel.Id}");
+                return Redirect($"~/Test/Pass?testId={testModel.Id}");
             }
 
             var rightAnswersCount = 0;
-            for (int i = 0; i < testViewModel.Questions.Count; i++)
+            for (int i = 0; i < testModel.Questions.Count; i++)
             {
-                var rightAnswer = test.Questions[i].Answers.FirstOrDefault(x => x.IsTrue);
-
-                if (testViewModel.Questions[i].Message == rightAnswer.Message)
+                if (testModel.Questions[i].SelectedAnswerId == test.Questions[i].SelectedAnswerId)
                 {
                     rightAnswersCount++;
                 }
             }
 
-            return RedirectToAction("ShowResult", new ResultViewModel
+            return RedirectToAction("ShowResult", new ResultModel
             {
-                AnswersCount = testViewModel.Questions.Count,
+                AnswersCount = testModel.Questions.Count,
                 RightAnswersCount = rightAnswersCount
             });
         }
 
-        public IActionResult ShowResult(ResultViewModel result)
+        public IActionResult ShowResult(ResultModel result)
         {
             return View(result);
+        }
+
+        private TestModel GetTestModelWithoutSelectedAnswers(TestModel test)
+        {
+            foreach (var question in test.Questions)
+            {
+                question.SelectedAnswerId = Guid.Empty;
+            }
+
+            return test;
         }
     }
 }
