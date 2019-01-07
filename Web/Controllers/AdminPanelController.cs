@@ -13,22 +13,16 @@ namespace Web.Controllers
     public class AdminPanelController : Controller
     {
         private readonly IRepository<TestEntity> testRepository;
-        private readonly IRepository<QuestionEntity> questionRepository;
-        private readonly IRepository<AnswerEntity> answerRepository;
 
-        public AdminPanelController(
-            IRepository<TestEntity> testRepository,
-            IRepository<QuestionEntity> questionRepository,
-            IRepository<AnswerEntity> answerRepository)
+        public AdminPanelController(IRepository<TestEntity> testRepository)
         {
             this.testRepository = testRepository;
-            this.questionRepository = questionRepository;
-            this.answerRepository = answerRepository;
         }
 
         public IActionResult Tests()
         {
-            var tests = testRepository.ToList()
+            var tests = testRepository
+                .Where(x => x.IsActive).ToList()
                 .Select(x => new TestModel(x)).ToList();
 
             return View(tests);
@@ -58,6 +52,22 @@ namespace Web.Controllers
             EditExistingTest(test, testModel);
             await testRepository.SaveContextAsync();
             TempData["Success"] = $"\"{test.Name}\" успешно сохранён";
+
+            return RedirectToAction("Tests");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var test = await testRepository.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (test == null)
+            {
+                return RedirectToAction("Tests");
+            }
+
+            test.IsActive = false;
+            await testRepository.SaveContextAsync();
 
             return RedirectToAction("Tests");
         }
