@@ -3,16 +3,28 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Context.Repository;
+using Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Web.Models;
 
 namespace Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IRepository<TestEntity> testRepository;
+
+        public HomeController(IRepository<TestEntity> testRepository)
+        {
+            this.testRepository = testRepository;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            var tests = testRepository.ToList();
+
+            return View(tests.Select(x => new TestModel(x)));
         }
 
         public IActionResult About()
