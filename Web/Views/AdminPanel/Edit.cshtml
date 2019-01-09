@@ -1,11 +1,12 @@
 ﻿@model TestModel
 @{
     ViewData["Title"] = "Настройки теста";
+    Layout = "_Layout";
 }
 
 <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
     <div class="panel panel-info">
-        @using (Html.BeginForm())
+        @using (Html.BeginForm("Edit", "AdminPanel", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="panel-heading">
                 <h3>Настройки теста</h3>
@@ -16,6 +17,11 @@
                 <div class="form-group">
                     @Html.LabelFor(x => x.Name)
                     @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label>Изображение теста</label>
+                    <input type="file" name="image" />
+                    <br>
                 </div>
                 <div class="form-group">
                     @for (int i = 0; i < Model.Questions.Count; i++)
@@ -41,6 +47,7 @@
             </div>
             <div class="panel-footer">
                 <input type="submit" class="btn btn-success" />
+                @Html.ActionLink("Вернуться назад", "Tests", "AdminPanel", null, new { @class = "btn btn-default" })
             </div>
         }
     </div>

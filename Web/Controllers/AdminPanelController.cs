@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Context.Repository;
 using Data.Entities;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Web.Misc;
 using Web.Models;
 
 namespace Web.Controllers
@@ -13,10 +15,13 @@ namespace Web.Controllers
     public class AdminPanelController : Controller
     {
         private readonly IRepository<TestEntity> testRepository;
+        private readonly IHostingEnvironment appEnvironment;
 
-        public AdminPanelController(IRepository<TestEntity> testRepository)
+        public AdminPanelController(IRepository<TestEntity> testRepository, 
+            IHostingEnvironment appEnvironment)
         {
             this.testRepository = testRepository;
+            this.appEnvironment = appEnvironment;
         }
 
         public IActionResult Tests()
@@ -30,18 +35,29 @@ namespace Web.Controllers
 
         public IActionResult Create()
         {
-            return View("Edit");
+            return RedirectToAction("Edit");
         }
 
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            var test = await testRepository.FirstOrDefaultAsync(x => x.Id == id);
-            return View(new TestModel(test));
+            if (id != null)
+            {
+                var test = await testRepository.FirstOrDefaultAsync(x => x.Id == id);
+                return View(new TestModel(test));
+            }
+
+            return View(ModelGenerator.GenerateTestModel());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(TestModel testModel)
+        public async Task<IActionResult> Edit(TestModel testModel, IFormFile image)
         {
+            if (testModel.Id == Guid.Empty)
+            {
+                await CreateTest(testModel, image);
+                return RedirectToAction("Tests");
+            }
+
             var test = await testRepository.FirstOrDefaultAsync(x => x.Id == testModel.Id);
 
             if (test == null)
@@ -49,7 +65,7 @@ namespace Web.Controllers
                 return View(testModel);
             }
 
-            EditExistingTest(test, testModel);
+            await EditExistingTest(test, testModel, image);
             await testRepository.SaveContextAsync();
             TempData["Success"] = $"\"{test.Name}\" успешно сохранён";
 
@@ -72,10 +88,43 @@ namespace Web.Controllers
             return RedirectToAction("Tests");
         }
 
-        private void EditExistingTest(TestEntity existingTest, TestModel test)
+
+
+        private async Task CreateTest(TestModel testModel, IFormFile image)
+        {
+            var test = new TestEntity
+            {
+                Name = testModel.Name,
+                IsActive = true,
+                Questions = testModel.Questions.Select(question => new QuestionEntity
+                {
+                    Message = question.Message,
+                    SelectedAnswerId = question.SelectedAnswerId,
+                    Answers = question.Answers.Select(answer => new AnswerEntity
+                    {
+                        Id = answer.Id,
+                        Message = answer.Message
+                    }).ToList()
+                }).ToList()
+            };
+
+            if (image != null)
+            {
+                test.ImagePath = await FileUploader.UploadImage(image, appEnvironment);
+            }
+
+            await testRepository.CreateAsync(test);
+            TempData["Success"] = $"\"{test.Name}\" успешно сохранён";
+        }
+
+        private async Task EditExistingTest(TestEntity existingTest, TestModel test, IFormFile image)
         {
             existingTest.Name = test.Name;
-            // TODO: Add new image
+
+            if (image != null)
+            {
+                existingTest.ImagePath = await FileUploader.UploadImage(image, appEnvironment);
+            }
 
             foreach (var question in test.Questions)
             {
