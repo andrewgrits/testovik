@@ -6,10 +6,14 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-        <div class="nav navbar-nav navbar-right">          
-                Hello @UserManager.GetUserName(User)!
-                @Html.ActionLink("Выйти", "Logout", "Identity", null, new { @class = "btn btn-link navbar-btn navbar-link" })
-        </div>
+    <div class="nav navbar-nav navbar-right">
+        Hello @UserManager.GetUserName(User)!
+        @Html.ActionLink("Выйти", "Logout", "Identity", null, new { @class = "btn btn-link navbar-btn navbar-link" })
+        @if (User.IsInRole("Administrator"))
+        {
+            @Html.ActionLink("Админ панель", "Tests", "AdminPanel", null, new { @class = "btn btn-link navbar-btn navbar-link" })
+        }
+    </div>
 }
 else
 {

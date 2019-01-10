@@ -41,9 +41,9 @@ namespace Web
                 options.UseLazyLoadingProxies();
             });
 
-        services.AddIdentity<UserEntity, IdentityRole>()
-                .AddEntityFrameworkStores<BaseDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<UserEntity, IdentityRole>()
+                    .AddEntityFrameworkStores<BaseDbContext>()
+                    .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -62,6 +62,12 @@ namespace Web
 
                 // User settings
                 options.User.RequireUniqueEmail = true;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Identity/Login";
+                options.AccessDeniedPath = "/Identity/AccessDenied";
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

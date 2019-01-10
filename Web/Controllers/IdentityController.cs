@@ -91,6 +91,11 @@ namespace Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         private async Task<bool> LoginByUserName(LoginViewModel model)
         {
             var user = await userManager.FindByNameAsync(model.Login);

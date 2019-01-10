@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Context.Repository;
 using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,13 @@ using Web.Models;
 
 namespace Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class AdminPanelController : Controller
     {
         private readonly IRepository<TestEntity> testRepository;
         private readonly IHostingEnvironment appEnvironment;
 
-        public AdminPanelController(IRepository<TestEntity> testRepository, 
+        public AdminPanelController(IRepository<TestEntity> testRepository,
             IHostingEnvironment appEnvironment)
         {
             this.testRepository = testRepository;

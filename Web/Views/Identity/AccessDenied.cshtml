@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewData["Title"] = "Доступ ограничен";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col-lg-4 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
+        <div class="panel panel-danger text-center">
+            <div class="panel-heading"><h4>Доступ ограничен</h4></div>
+            <div class="panel-body">
+                <h2 class="text-danger">У вас нет прав для просмотра данной страницы!</h2>
+            </div>
+            <div class="panel-footer">
+                <a href="@Url.Content("~/")" class="btn btn-warning">Вернуться на главную</a>
+            </div>
+        </div>
+    </div>
+</div>
